@@ -1,48 +1,45 @@
 //Deposit
 
-function getInputValue(){
-    const depositInput = document.getElementById('deposit-input');;
-    const depositAmount = parseFloat(depositInput.value);
-    depositInput.value="";
-    return depositAmount;
+function getInputValue(inputId) {
+    // debugger;
+    const inputField = document.getElementById(inputId);;
+    const inputAmount = parseFloat(inputField.value);
+    inputField.value = "";
+    return inputAmount;
 }
-function getTotalValue(){
-    return null;
-}
-document.getElementById('deposit-button').addEventListener('click', function () {
-    //getting the new amount 
-    const depositAmount = getInputValue();
+function getTotalValue(depositAmount, totalId) {
 
-    const currentdepositTotal = document.getElementById('deposit-total');
+    const currentdepositTotal = document.getElementById(totalId);
     var currentdepositTotalAmount = parseFloat(currentdepositTotal.innerText);
-    const updatedDepositTotal = currentdepositTotalAmount+depositAmount;
-    currentdepositTotal.innerText=updatedDepositTotal;
-
+    const updatedDepositTotal = currentdepositTotalAmount + depositAmount;
+    currentdepositTotal.innerText = updatedDepositTotal;
+}
+function updateBalance(updateAmount, isAdd) {
     const currentdBalanceTotal = document.getElementById('balance-total');
     var currentBalanceTotalAmount = parseFloat(currentdBalanceTotal.innerText);
-    const updatedBalanceTotal = currentBalanceTotalAmount+depositAmount;
-
-    currentdBalanceTotal.innerText=updatedBalanceTotal;
+    if (isAdd) {
+        currentdBalanceTotal.innerText = currentBalanceTotalAmount + updateAmount;
+    }
+    else {
+        currentdBalanceTotal.innerText = currentBalanceTotalAmount - updateAmount;
+    };
+};
+document.getElementById('deposit-button').addEventListener('click', function () {
+    //getting the new amount 
+    const depositAmount = getInputValue('deposit-input');
+    if (depositAmount > 0) {
+        getTotalValue(depositAmount, 'deposit-total');
+        updateBalance(depositAmount, true);
+    }
 
 });
 //Withdraw
 document.getElementById('withdraw-button').addEventListener('click', function () {
     //getting the new amount 
-    var withdrawInput = document.getElementById('withdraw-input');;
-    withdrawAmount = parseFloat(withdrawInput.value);
-
-
-    const currentWithdrawTotal = document.getElementById('withdraw-total');
-    var currentWithdrawTotalAmount = parseFloat(currentWithdrawTotal.innerText);
-    const updatedWithdrawTotal = currentWithdrawTotalAmount+withdrawAmount;
-
-    currentWithdrawTotal.innerText=updatedWithdrawTotal;
-    withdrawInput.value="";
-
-    const currentdBalanceTotal = document.getElementById('balance-total');
-    var currentBalanceTotalAmount = parseFloat(currentdBalanceTotal.innerText);
-    const updatedBalanceTotal = currentBalanceTotalAmount-withdrawAmount;
-
-    currentdBalanceTotal.innerText=updatedBalanceTotal;
-
+    const withdrawAmount = getInputValue('withdraw-input');
+    const currentBalance = parseFloat(document.getElementById('balance-total').innerText);
+    if (withdrawAmount > 0 && withdrawAmount<=currentBalance) {
+        getTotalValue(withdrawAmount, 'withdraw-total');
+        updateBalance(withdrawAmount, false);
+    }
 });
